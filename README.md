@@ -2,6 +2,49 @@
 
 ## Hacking around Springboot and Rabbit MQ
 
+**Start RabbitMQ**
+```shell
+docker-compose up
+```
+**Run App**
+```shell
+mvn spring-boot:run
+```
+
+**Test**
+```shell
+curl --location --request POST 'http://localhost:8000/api/v1/publish' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "fullName":"Cosmas Lorem",
+    "phone":"25412345678",
+    "email":"test@mail.dev"
+}'
+```
+
+**Response**
+```shell
+{"code":200,"message":"Message Published"}
+```
+
+**stdout**
+```shell
+NotificationRequest(fullName=Cosmas Lorem, phone=25412345678, email=test@mail.dev)
+------------------------
+Publishing to internal.exchange using routingKey internal.notification.routing-key. Payload: NotificationRequest(fullName=Cosmas Lorem, phone=25412345678, email=test@mail.dev)
+------------------------
+------------------------
+Published to internal.exchange using routingKey internal.notification.routing-key. Payload: NotificationRequest(fullName=Cosmas Lorem, phone=25412345678, email=test@mail.dev)
+------------------------
+------------------------
+Consumed message from queue
+NotificationRequest(fullName=Cosmas Lorem, phone=25412345678, email=test@mail.dev)
+------------------------
+```
+
+Inspect at Rabbit Management UI
+[Dashboard - http://localhost:15672/](http://localhost:15672/)
+
 ### Reference Documentation
 
 For further reference, please consider the following sections:
