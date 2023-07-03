@@ -1,54 +1,35 @@
 package dev.itscosmas.microservices.springrabbit.config;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 public class AppConfig {
 
-  @Value("${rabbitmq.exchanges.internal}")
-  private String internalExchange;
+    @Value("${app.mq.notification.exchange}")
+    private String notificationExchange;
 
-  @Value("${rabbitmq.queues.notification}")
-  private String notificationQueue;
+    @Value("${app.mq.notification.queue}")
+    private String notificationQueue;
 
-  @Value("${rabbitmq.routing-keys.internal-notification}")
-  private String internalNotificationRoutingKey;
+    @Value("${app.mq.notification.routing-key}")
+    private String notificationRoutingKey;
 
-  @Bean
-  public TopicExchange internalTopicExchange() {
-    return new TopicExchange(this.internalExchange);
-  }
+    @Value("${app.mq.deadLetter.exchange}")
+    private String deadLetterExchange;
 
-  @Bean
-  public Queue notificationQueue() {
-    return new Queue(this.notificationQueue);
-  }
+    @Value("${app.mq.deadLetter.queue}")
+    private String deadLetterQueue;
 
-  @Bean
-  public Binding internalToNotificationBinding() {
-    return BindingBuilder
-      .bind(notificationQueue())
-      .to(internalTopicExchange())
-      .with(this.internalNotificationRoutingKey);
-  }
-
-
-  public String getInternalExchange() {
-    return internalExchange;
-  }
-
-  public String getNotificationQueue() {
-    return notificationQueue;
-  }
-
-  public String getInternalNotificationRoutingKey() {
-    return internalNotificationRoutingKey;
-  }
+    @Value("${app.mq.deadLetter.routing-key}")
+    private String deadLetterRoutingKey;
 }
-

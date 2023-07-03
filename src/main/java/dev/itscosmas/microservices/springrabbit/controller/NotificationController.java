@@ -1,6 +1,7 @@
 package dev.itscosmas.microservices.springrabbit.controller;
 
 import dev.itscosmas.microservices.springrabbit.config.AppConfig;
+import dev.itscosmas.microservices.springrabbit.config.RabbitMQConfig;
 import dev.itscosmas.microservices.springrabbit.producer.RabbitProducer;
 import dev.itscosmas.microservices.springrabbit.schema.BaseResponse;
 import dev.itscosmas.microservices.springrabbit.schema.NotificationRequest;
@@ -23,7 +24,7 @@ public class NotificationController {
   BaseResponse brs = new BaseResponse();
 
   final RabbitProducer rabbitProducer;
-  final AppConfig config;
+  final AppConfig cfg;
 
   public NotificationController(RabbitProducer rabbitProducer, AppConfig config) {
     responseHeaders = new HttpHeaders();
@@ -32,7 +33,7 @@ public class NotificationController {
     responseHeaders.set("Content-Security-Policy", "default-src 'none'");
 
     this.rabbitProducer = rabbitProducer;
-    this.config = config;
+    this.cfg = config;
   }
   @PostMapping("/publish")
   public ResponseEntity<BaseResponse> sendNotification(@Validated @RequestBody NotificationRequest notificationRequest){
@@ -42,7 +43,7 @@ public class NotificationController {
 
     System.out.println(notificationRequest);
 
-    rabbitProducer.publish(notificationRequest, config.getInternalExchange(), config.getInternalNotificationRoutingKey());
+    rabbitProducer.publish(notificationRequest, cfg.getNotificationExchange(), cfg.getNotificationRoutingKey());
 
     return ResponseEntity.ok().headers(responseHeaders).body(brs);
   }
