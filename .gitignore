@@ -34,3 +34,6 @@ build/
 
 # Rabbit Data
 rabbit_data/
+
+# logs
+log/
